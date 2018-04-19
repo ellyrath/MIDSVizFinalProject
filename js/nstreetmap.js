@@ -26,5 +26,6 @@ function renderStreetMap() {
         return L.circleMarker(latlng, geojsonMarkerOptions);
     }
    }).addTo(mymap);
+setTimeout(function(){mymap.invalidateSize()}, 400);
 console.log("after map31");
 }
