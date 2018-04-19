@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>NYC Collision Data Visualization</title>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/full-width-pics.css" rel="stylesheet">
+    <style type="text/css">
+    #collisionData {
+        margin-left: -20px;
+    }
+
+    #spinner {
+        position: absolute;
+        left: 50%;
+    }
+
+
+    .line {
+        fill: none;
+        stroke: #84C805;
+        stroke-width: 1.5px;
+    }
+
+    .area {
+        fill: #DBFC9E;
+    }
+
+    .attention {
+        background: yellow;
+        margin: -4px;
+        padding: 4px;
+    }
+
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .focus circle {
+        fill: steelblue;
+        stroke: steelblue;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">New York City Collisions</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!--         <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div> -->
+    </nav>
+    <!-- Header - set the background image for the header in the line below -->
+    <header class="py-5 bg-image-full" style="background-image: url('/images/nycmap.png');">
+    </header>
+    <!-- Content section -->
+    <section class="py-5">
+        <div class="container">
+            <h1>Traffic collisions</h1>
+            <p class="lead">NYC traffic collisions from 2012 to 2018</p>
+            <p>Every year more than 200,000 vehicle collisions occur in the five boroughs of New York City. The NYPD began publishing a data set of every recorded vehicle collsion in the city in July of 2011. The aim of this project is to analyze the Traffic Collision dataset and present visually identifiable patterns that would enable city planners, traffic management and commuters to make informed choices and reduce risk of collisions.</p>
+            <p>The visualization below processes <i><strong>1.23 million</strong></i> data points for traffic collisions in the city of New York everyday from <u>August 2012</u> to <u>March 2018</u>.</p>
+        </div>
+    </section>
+    <!-- Image Section - set the background image for the header in the line below -->
+    <section class="py-5 bg-image-full>
+      <!-- Put anything you want here! There is just a spacer below for demo purposes! -->
+      <div style=" height: 200px; " id="collisionData" class="row align-items-center justify-content-center"> 
+              <span id="spinner"><strong>Loading visualization...</strong><img src="/images/spinner-loop.gif " height="50" width="50"></span>
+      </div>
+    </section>
+
+    <!-- Content section -->
+    <section class="py-5">
+      <div class="container">
+        <h1>What are NY boroughs?</h1>
+        <p>New York City encompasses five different county-level administrative divisions called boroughs: Manhattan, the Bronx, Queens, Brooklyn, and Staten Island. All boroughs are part of New York City, and each of the boroughs is coextensive with a respective county, the primary administrative subdivision within New York State. The Bronx and Queens are concurrent with the counties of the same name, while Manhattan, Brooklyn, and Staten Island correspond to New York, Kings, and Richmond Counties respectively.</p>
+        <img src="/images/borough-desc.png ">
+      </div>
+    </section>
+
+    <section class="py-5">
+      <div class="container">
+        <h1>Boroughs with maximum casualties</h1>
+        <img src="/images/dangerous.png ">
+      </div>
+    </section>    
+
+    <section class="py-5">
+      <div class="container">
+        <h1>Did things change over time?</h1>
+        <img src="/images/borough-years.png ">
+      </div>
+    </section>  
+
+    <section class="py-5">
+      <div class="container">
+        <h1>Fatal collision hotspots</h1>
+        <img src="/images/fatal.png ">
+      </div>
+    </section> 
+
+     <section class="py-5">
+      <div class="container">
+        <h1>Accident prone areas</h1>
+        <img src="/images/accident-prone.png ">
+        <p class="lead ">Recommendations for reducing the number of collisions</p>
+        <p>
+          <ul>
+            <li>Put out more warning signs</li>
+            <li>Improve street lighting</li>
+          </ul>
+        </p>
+      </div>
+    </section>   
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark ">
+      <div class="container">
+        <p class="m-0 text-center text-white ">Copyright &copy; Elly & Manish 2018</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js "></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js "></script>
+    <script src="https://d3js.org/d3.v4.min.js "></script>
+<!-- <script src="time-series-chart.js "></script> -->
+<script>
+/*************** My Code ******************/
+//   var chart = timeSeriesChart()
+//     .width(1500)
+//     .height(500)
+//     .margin({top: 20, right: 20, bottom: 20, left: 300})
+//     .x(function(d) { return formatDate(d.date); })
+//     .y(function(d) { 
+//       return d.count; });
+
+// var formatDate = d3.timeParse("%m/%d/%Y "),
+// collision = [];
+// d3.csv("NYPD_Motor_Vehicle_Collisions.csv ", function(data) {
+//   collisionDict = {}
+//   for (var i =0; i < data.length; i++){
+//     if (data[i].date in collisionDict){
+//       collisionDict[data[i].date] = ++collisionDict[data[i].date];
+//     }else{
+//       collisionDict[data[i].date] = 1;
+//     }
+//   }
+//   for (var item in collisionDict){
+//     collision.push({date: item, count:collisionDict[item] });
+//   }
+
+//   sortCollisionData();
+//   updateChart();
+//   hideSpinner();
+
+// });
+
+// function updateChart(){
+//     d3.select("#collisionData ")
+//       .datum(collision)
+//       .call(chart);
+// }
+
+function sortCollisionData(){
+  collision.sort(function(a,b) {return (new Date(a.date) > new Date(b.date)) ? 1 : ((new Date(b.date) > new Date(a.date)) ? -1 : 0);} );
+}
+
+function hideSpinner(){
+  $('#spinner').hide();
+}
+/****************** End *********************/
+
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 30, left: 100},
+    width = 1500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// parse the date / time
+var parseTime = d3.timeParse("%m/%d/%Y");
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// define the area
+var area = d3.area()
+    .x(function(d) { return x(d.date); })
+    .y0(height)
+    .y1(function(d) { return y(d.count); });
+
+// define the line
+var valueline = d3.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.count); });
+
+var svg = d3.select("#collisionData").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + ", " + margin.top + ") ");
+
+// get the data
+var collision = [];
+d3.csv("NYPD_Motor_Vehicle_Collisions.csv ", function(error, data) {
+// d3.csv("data.csv", function(error, data) {
+  if (error) throw error;
+
+    var collisionDict = {};
+  for (var i =0; i < data.length; i++){
+        data[i].date = parseTime(data[i].date);
+    if (data[i].date in collisionDict){
+      collisionDict[data[i].date] = ++collisionDict[data[i].date];
+    }else{
+      collisionDict[data[i].date] = 1;
+    }
+  }
+  for (var item in collisionDict){
+    collision.push({date: new Date(item), count:collisionDict[item]});
+  }
+
+  sortCollisionData();
+   
+
+  // format the data
+  // var collision = [];
+  // parseTime = d3.timeParse("%d-%b-%y");
+  // data.forEach(function(d) {
+  //   console.log(d);
+  //     d.date = parseTime(d.date);
+  //     d.close = +d.close;
+  //     collision.push(d);
+  // });
+  // console.log(collision);
+
+  // scale the range of the data
+  x.domain(d3.extent(collision, function(d) { return d.date; }));
+  y.domain([0, d3.max(collision, function(d) { return d.count; })]);
+
+  // add the area
+    svg.append("path")
+       .data([collision])
+       .attr("class", "area")
+       .attr("d", area);
+
+  // add the valueline path.
+  svg.append("path")
+      .data([collision])
+      .attr("class", "line")
+      .attr("d", valueline);
+
+  // add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // add the Y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
+    hideSpinner();
+
+});
+</script>
+
+  </body>
+
+</html>

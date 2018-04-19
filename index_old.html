@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- <svg width="960" height="960" font-family="sans-serif" font-size="10" text-anchor="middle"></svg> -->
+<div id="collisionTimeline"></div>
+<!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.3/d3.min.js"></script>
+<script src="d3-timeline.js"></script>
+<script type="text/javascript">
+	var testData = [
+  {label: "person a", times: [
+    {"starting_time": 1355752800000, "ending_time": 1355759900000, "color":"green"},
+    {"starting_time": 1355767900000, "ending_time": 1355774400000}]},
+  {label: "person b", times: [
+    {"starting_time": 1520363520000, "display": "circle" }]},
+  {label: "person c", times: [
+    {"starting_time": 1355761910000, "ending_time": 1355763910000}]}
+  ];
+ // var rectAndCircleTestData = [
+ //    {times: [{"starting_time": 1355752800000, "display": "circle"},
+ //             {"starting_time": 1355767900000, "ending_time": 1355774400000}]},
+ //    {times: [{"starting_time": 1355759910000, "display":"circle"}, ]},
+ //    {times: [{"starting_time": 1355761910000, "ending_time": 1355763910000}]}
+ //  ];
+
+var chart = d3.timeline().stack().hover(function (d, i, datum) {
+return "testing"
+  });
+
+var svg = d3.select("#collisionTimeline").append("svg").attr("width", 960).attr("height", 960)
+  .datum(testData).call(chart);
+
+</script>

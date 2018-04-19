@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>NYC Collision Data Insights</title>
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+  <script src="https://d3js.org/d3-queue.v3.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/full-width-pics.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/tooltip.css">
+  <link rel="stylesheet" href="css/tooltip2.css">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+    <style type="text/css">
+    #collisionData {
+        margin-left: -20px;
+    }
+
+    #spinner {
+        position: absolute;
+        left: 50%;
+    }
+
+
+    .line {
+        fill: none;
+        stroke: #FF7B57;
+        stroke-width: 1.5px;
+    }
+
+    .area {
+        fill: #7CD8FF;
+    }
+
+    .attention {
+        background: yellow;
+        margin: -4px;
+        padding: 4px;
+    }
+
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .focus circle {
+        fill: red;
+        stroke: red;
+    }
+
+    .tooltip {
+        fill: white;
+        stroke: black;
+    }
+
+    .tooltip-date, .tooltip-count {
+        font-weight: bold;
+    }
+    </style>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62809346-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments) };
+    gtag('js', new Date());
+    gtag('config', 'UA-62809346-2');
+  </script>
+  <script type="text/javascript">
+    setTimeout(function(){
+      var content = $('#content'),
+       footer = $('footer'),
+       nav = $('#navigation');
+      nav.show("slow");
+content.show("slow");
+footer.show("slow");
+      },500);
+  </script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <div id="navigation" style="display: none">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">New York City Collisions Insights</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Header - set the background image for the header in the line below -->
+    <header class="py-5 bg-image-full" style="background-image: url('images/nycmap.png');">
+    </header>
+    </div>
+    </section>
+    </div>
+    <div id="content" style="display: none;">
+    <!-- Content section -->
+    <section class="py-5">
+        <div class="container">
+            <h1>Traffic collisions</h1>
+            <p class="lead">NYC traffic collisions from 2012 to 2018</p>
+            <p>Every year more than 200,000 vehicle collisions occur in the five boroughs of New York City. The NYPD began publishing a data set of every recorded vehicle collsion in the city in July of 2011. The aim of this project is to analyze the Traffic Collision dataset and present visually identifiable patterns that would enable city planners, traffic management and commuters to make informed choices and reduce risk of collisions.</p>
+            <p>The visualization below processes <i><strong>1.23 million</strong></i> data points for traffic collisions in the city of New York everyday from <u>August 2012</u> to <u>March 2018</u>.</p>
+        </div>
+    </section>
+    <!-- Image Section - set the background image for the header in the line below -->
+    <section class="py-5 bg-image-full">
+      <div style=" height: 400px; " id="collisionData" class="row align-items-center justify-content-center"> 
+              <span id="spinner"><strong>Loading interactive visualization...</strong><img src="images/spinner-loop.gif " height="50" width="50"></span>
+      </div>
+    </section>
+
+    <!-- Content section -->
+    <section class="py-5">
+      <div class="container">
+        <h1>What are NY boroughs?</h1>
+        <p>New York City encompasses five different county-level administrative divisions called boroughs: Manhattan, the Bronx, Queens, Brooklyn, and Staten Island. All boroughs are part of New York City, and each of the boroughs is coextensive with a respective county, the primary administrative subdivision within New York State. The Bronx and Queens are concurrent with the counties of the same name, while Manhattan, Brooklyn, and Staten Island correspond to New York, Kings, and Richmond Counties respectively.</p>
+        <img src="images/borough-desc.png ">
+      </div>
+    </section>
+
+    <section class="py-5">
+      <div class="container">
+        <h1>Accidents at a glance</h1>
+        <p>In the following graph one can see the number of accidents in NYC over the years and their breakdown based on boroughs. The lower portion of the graph shows the number of injuries in each year. <br><img src="images/tips.png"> Click on the buttons under each year to filter and see the results for that year.</p>
+        <!-- <img src="images/dangerous.png "> -->
+        <div class='tableauPlaceholder' id='viz1524108097027' style='position: relative'><noscript><a href='#'><img alt='DashSummary ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;DashSummary&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DeadlyNYC&#47;DashSummary' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;DashSummary&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1524108097027');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='1000px';vizElement.style.height='827px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+<br>
+<br>
+      <p>Well, are you overwhelmed by the sheer volume? Don’t be!
+We have broken down them into details for you down below. In the visual we have tried to capture the major contributing factors of accidents and filter them based on the commuters injured vs killed. <br><img src="images/tips.png"> The drop-down on the right can be used to interact with the viz for various types of commuters.
+</p>
+<div class='tableauPlaceholder' id='viz1524108455485' style='position: relative'><noscript><a href='#'><img alt='Dash-Factors ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;Dash-Factors&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DeadlyNYC&#47;Dash-Factors' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;Dash-Factors&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1524108455485');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='1000px';vizElement.style.height='827px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+<br>
+<br>
+<p>As we can see above the number of injured and killed are far less compared to the number of accidents. It is a relief to see that not all accidents result in injuries or deaths. But still the number is high, how can we help you travel safe?
+This shows all the intersections which have recorded more than 200 incidents. <br><img src="images/tips.png"> Click on the map of the boroughs to interactively see the various streets in each borough. Staten Island will not show any as there are no intersections with more than 200 incidents.
+</p>
+<div class='tableauPlaceholder' id='viz1524108788072' style='position: relative'><noscript><a href='#'><img alt='Dash-Intersections ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;Dash-Intersections&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DeadlyNYC&#47;Dash-Intersections' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;Dash-Intersections&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1524108788072');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='1000px';vizElement.style.height='827px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+
+      <br>
+      <p>Well you may be wondering what else could be the cause of such high number of incidents.
+Some factors are listed below:
+<br><img src="images/tips.png"> Select the radio button on the right to filter the vehicle group
+</p>
+<br>
+<div class='tableauPlaceholder' id='viz1524109086250' style='position: relative'><noscript><a href='#'><img alt='SeasonImpacts ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;SeasonImpacts&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DeadlyNYC&#47;SeasonImpacts' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;SeasonImpacts&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1524109086250');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='1000px';vizElement.style.height='827px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+<br>
+<h4>Observations:</h4>
+<ul><li>
+  <strong>Cyclists </strong>- Bicycles, motorcycles and scooters are often seen during favourable weather conditions like spring, summer, fall. During the months of summer we see more 2-wheelers on the road and hence the number of recorded accidents with 2-wheelers are more.
+</li>
+<li>
+  <strong>Passenger Vehicles </strong>- Although people use their cars/SUVs/vans throughout the year we see more accidents in spring and summer. This could be related to more people travelling during school breaks etc.
+</li>
+<li>
+  <strong>Taxis </strong>- People use taxis during harsh weather conditions- Winter. The number  of accidents are more for the same.
+</li>
+<li>
+  <strong>Buses </strong>- Buses don’t show any trend as such since they are operational throughout the year. But we see that during fall and winter there is a slight increase in the number of accidents.
+</li>
+</ul>
+<p>So, no matter how you commute, drive safe during the winters!
+</p>
+
+<h3>Alcohol</h3>
+<p>Below we see that peak hours for alcohol related accidents are between 3am to 5am generally. <br><img src="images/tips.png"> Click on the borough outlines to filter based on boroughs.</p>
+<div class='tableauPlaceholder' id='viz1524110353304' style='position: relative'><noscript><a href='#'><img alt='Dash- alcohol ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;Dash-alcohol&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DeadlyNYC&#47;Dash-alcohol' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;De&#47;DeadlyNYC&#47;Dash-alcohol&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1524110353304');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='1000px';vizElement.style.height='827px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+<br>
+<p>Our advice: Use public transport to the extent possible and never drive under influence of alcohol.</p>
+
+      </div>
+    </section> 
+
+     <section class="py-5">
+      <div class="container">
+        <h1>The Top 50 Fatal Locations</h1>
+        <div id="chart1"> 
+     <h1 align="center">Top 50 places with fatal accidents by year</h1>
+     <div style="float:left">
+        <h3 id="map__text"></h3>
+        <div id="btn-zoom" float="right">
+          <i id="btn-zoom--in" class="fa fa-search-plus fa-2x" aria-hidden="true"></i>
+          <i id="btn-zoom--out" class="fa fa-search-minus fa-2x" aria-hidden="true"></i>
+        </div>
+        <div id = "yeardropdown"></div>
+        <div> 
+           <button class="button" onclick="$('#popup').w2popup()">Usage</button> 
+        </div> 
+     </div>
+     <div id="map__container">
+     </div>
+</div>
+
+     <br/>
+     <br/>
+     <div id="chart2">
+      <h1 align="center"> Street map view of Traffic Accidents</h1>
+         <div id="map_container2" style="width: 800px; height: 400px;"></div>
+     </div>
+
+
+   <div id="popup" style="display: none; width: 650px; height: 200px; overflow: auto">
+       <div rel="title">
+        User Interaction 
+       </div>
+       <div rel="body">
+           <div style="padding: 10; font-size: 11px; line-height: 150%;"> </div>
+            <div>
+             This is the visualization of the top 50 fatal accidents points in New York by year. The map delineates the buroughs (districts)
+             of New York. <br /> 
+             The intention of this visualization is to give the user a high level picture of the dangerous spots in New York. The map is initialized
+             with the data of 2012. As the user goes through the years, the additional data gets appended to the visualization. This provides a 
+             complete picture of the dangerous spots in New York, the area where there are multiple accidents over the years. <br/> 
+
+             Visualization Interactions: <br/>
+                1. The map can be zoomed in and out by double clicking or mouse wheel. <br/> 
+                2. The map can be zoomed in and out by the dedicated + and - button on the screen <br/>
+                3. Hovering over the accident image, gives details about the spot of accident via tooltip <br/>
+                4. Hovering over the burrough gives details about the burrough via tooltip <br/>
+                5. The map can be moved around. <br/>  
+           </div>
+       </div>
+  </div>
+
+      </div>
+    </section>      
+</div>
+    <!-- Footer -->
+    <footer style="display: none;" class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white ">Copyright &copy; Elly Rath & Manish Shah 2018</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+<!--     <script src="vendor/jquery/jquery.min.js "></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js "></script>
+    <script src="https://d3js.org/d3.v4.min.js "></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+  <script src="https://d3js.org/d3-queue.v3.js"></script>  -->   
+    <script src="js/collisionDataViz.js "></script>
+    <script>document.body.style.cursor = "wait"</script>  
+   <script src="js/d3-tip.js"></script>
+   <script src="js/nyboroughs.js?"></script>
+   <script src="js/topaccidentsbyyear.js?n=1"></script>
+   <script src="js/nstreetmap.js?n=1"></script>
+   <script src="js/plottopaccidents.js?n=1"></script>
+   <script>document.body.style.cursor = "default"</script>  
+  </body>
+</html>
