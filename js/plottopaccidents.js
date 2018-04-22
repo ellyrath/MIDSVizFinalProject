@@ -247,7 +247,7 @@ function initialGraph(accidents, selectedYear) {
      .enter()
      .append( "svg:image" )
      .filter(function (d) { return (d.properties.year == selectedYear)})
-       .attr("xlink:href","../images/brown.png")
+       .attr("xlink:href","images/brown.png")
        .attr("opacity",0.7)
        .attr( "x", function(d){ 
        return projection( d.geometry.coordinates )[0];
