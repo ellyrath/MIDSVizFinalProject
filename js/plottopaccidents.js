@@ -102,7 +102,7 @@ d3.select("#btn-zoom--out").on("click", () => clickToZoom(ZOOM_OUT_STEP));
 var burrough_data;
 var selectedyear;
 
-d3.csv("../data/burroughdata.csv", function(csv_data){
+d3.csv("data/burroughdata.csv", function(csv_data){
                     
             burrough_data = d3.nest()
                 .key(function(d) { return d.Year; })
