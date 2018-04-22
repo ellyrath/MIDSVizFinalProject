@@ -212,7 +212,7 @@ var accidents = g.append( "g" ).attr( "id", "accidents" );
 function updateGraph(accidents, selectedYear) {
 
    console.log(selectedYear);
-   imagename = ['../images/black.png', '../images/blue.png','../images/orange.png','../images/green.png','../images/grey.png','../images/black.png']
+   imagename = ['images/black.png', 'images/blue.png','images/orange.png','images/green.png','images/grey.png','images/black.png']
    cindex = selectedYear - 2013;
 
    accidents.selectAll( "image" )
