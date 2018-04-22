@@ -212,7 +212,7 @@ var accidents = g.append( "g" ).attr( "id", "accidents" );
 function updateGraph(accidents, selectedYear) {
 
    console.log(selectedYear);
-   imagename = ['../images/black.png', '../images/blue.png','../images/orange.png','../images/green.png','../images/grey.png','../images/black.png']
+   imagename = ['images/black.png', 'images/blue.png','images/orange.png','images/green.png','images/grey.png','images/black.png']
    cindex = selectedYear - 2013;
 
    accidents.selectAll( "image" )
@@ -247,7 +247,7 @@ function initialGraph(accidents, selectedYear) {
      .enter()
      .append( "svg:image" )
      .filter(function (d) { return (d.properties.year == selectedYear)})
-       .attr("xlink:href","../images/brown.png")
+       .attr("xlink:href","images/brown.png")
        .attr("opacity",0.7)
        .attr( "x", function(d){ 
        return projection( d.geometry.coordinates )[0];
