@@ -1,21 +1,3 @@
-/**
- * SVG structure:
- *   <svg> - container for entire map
- *     <g> - handle zoom and drag position
- *       <rect> - overlay a transparent layer for smooth zoom and drag
- *       <g> of <path> - each `path` is a district in the map
- *       <g> of <text> - districts' name
- *     </g>
- *   </svg>
- *
- * Reference:
- *   http://www.ourd3js.com/wordpress/296/
- *   https://bl.ocks.org/mbostock/4e3925cdc804db257a86fdef3a032a45
- *   https://stackoverflow.com/questions/35443768/how-do-i-fix-zooming-and-panning-in-my-cluster-bundle-graph
- *   https://groups.google.com/forum/#!topic/d3-js/OAJgdKtn1TE
- *   https://groups.google.com/forum/#!topic/d3-js/sg4pnuzWZUU
- */
-
 const WIDTH = 800; 
 const HEIGHT = window.innerHeight;
 const ZOOM_THRESHOLD = [0.3, 7];
@@ -70,7 +52,6 @@ var tip = d3.tip()
             .offset([-10, 0])
             .html(function(d) {
               console.log("In tip");
-              console.log(d);
               return  "<strong>Year: </strong><span class='details'>" + 
                       d.properties.year +"<br></span>" + 
                       "<strong>People Killed: </strong><span class='details'>" + 
@@ -121,7 +102,7 @@ d3.select("#btn-zoom--out").on("click", () => clickToZoom(ZOOM_OUT_STEP));
 var burrough_data;
 var selectedyear;
 
-d3.csv("data/burroughdata.csv", function(csv_data){
+d3.csv("../data/burroughdata.csv", function(csv_data){
                     
             burrough_data = d3.nest()
                 .key(function(d) { return d.Year; })
@@ -138,8 +119,8 @@ d3.csv("data/burroughdata.csv", function(csv_data){
 const svg = d3
   .select("#map__container")
   .append("svg")
-  .attr("height", "700px")
-  .attr("width", "1000px");
+  .attr("height", "800px")
+  .attr("width", "1400px");
  // .attr("style","border:1px solid red;text-align:center;padding:0 50px 0 0");
 
 const g = svg.call(zoom).append("g");
@@ -228,20 +209,22 @@ function renderMap(root) {
 
 var accidents = g.append( "g" ).attr( "id", "accidents" );
 
-
-var selectedYear = '2018'
-
 function updateGraph(accidents, selectedYear) {
 
+   console.log(selectedYear);
+   imagename = ['../images/black.png', '../images/blue.png','../images/orange.png','../images/green.png','../images/grey.png','../images/black.png']
+   cindex = selectedYear - 2013;
+
    accidents.selectAll( "image" )
-     .data( topaccidents_json.features )
+     .data(topaccidents_json.features)
      .on('mouseover',function(d){
              tip.show(d)})
      .on('mouseout', function(d){
              tip.hide(d)})
      .transition()
+     .duration(0)
      .filter(function (d) { return (d.properties.year == selectedYear)})
-       .attr("xlink:href","images/accident.png")
+       .attr("xlink:href",imagename[cindex])
        .attr("opacity",0.7)
        .attr( "x", function(d){ 
           return projection( d.geometry.coordinates )[0];
@@ -257,16 +240,14 @@ function updateGraph(accidents, selectedYear) {
 }
 
 
-
-
-
 function initialGraph(accidents, selectedYear) {
-   accidents.selectAll( "image" )
+     console.log(selectedYear);
+     accidents.selectAll( "image" )
      .data( topaccidents_json.features )
      .enter()
      .append( "svg:image" )
      .filter(function (d) { return (d.properties.year == selectedYear)})
-       .attr("xlink:href","images/accident.png")
+       .attr("xlink:href","../images/brown.png")
        .attr("opacity",0.7)
        .attr( "x", function(d){ 
        return projection( d.geometry.coordinates )[0];
